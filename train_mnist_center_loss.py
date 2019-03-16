@@ -12,20 +12,34 @@ import matplotlib.pyplot as plt
 
 batch_size = 100
 
-def visualize(feat, labels, epoch):
+# def visualize(feat, labels, epoch):
+#     plt.ion()
+#     c = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff',
+#          '#ff00ff', '#990000', '#999900', '#009900', '#009999']
+#     plt.clf()
+#     for i in range(10):
+#         plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
+#     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
+#     #   plt.xlim(xmin=-5,xmax=5)
+#     #   plt.ylim(ymin=-5,ymax=5)
+#     plt.text(-4.8, 4.6, "epoch=%d" % epoch)
+#     plt.savefig('./images/center_loss_epoch=%d.jpg' % epoch)
+#     plt.draw()
+#     plt.pause(0.001)
+
+
+def visualize(feat, weights, labels, epoch):
     plt.ion()
     c = ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff',
          '#ff00ff', '#990000', '#999900', '#009900', '#009999']
     plt.clf()
     for i in range(10):
-        plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i])
+        plt.plot(feat[labels == i, 0], feat[labels == i, 1], '.', c=c[i], markersize=0.3)
     plt.legend(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'], loc='upper right')
-    #   plt.xlim(xmin=-5,xmax=5)
-    #   plt.ylim(ymin=-5,ymax=5)
-    plt.text(-4.8, 4.6, "epoch=%d" % epoch)
-    plt.savefig('./images/center_loss_epoch=%d.jpg' % epoch)
-    plt.draw()
-    plt.pause(0.001)
+    # plt.text(-4.8, 4.6, "epoch=%d" % epoch)
+    plt.plot(weights[:,0], weights[:,1], '.', c='black', markersize=1)
+    plt.savefig('./images/LGMu_loss_epoch=%d.eps' % epoch,format='eps')
+    plt.close()
 
 
 def test(test_loder, model, use_cuda):
@@ -55,7 +69,8 @@ def train(train_loader, model, criterion, optimizer, epoch, loss_weight, use_cud
         data, target = Variable(data), Variable(target)
 
         feats, logits = model(data)
-        loss = criterion[0](logits, target) + loss_weight * criterion[1](target, feats)
+        centerloss, centers = criterion[1](target, feats)
+        loss = criterion[0](logits, target) + loss_weight * centerloss
 
         _, predicted = torch.max(logits.data, 1)
         accuracy = (target.data == predicted).float().mean()
@@ -76,7 +91,7 @@ def train(train_loader, model, criterion, optimizer, epoch, loss_weight, use_cud
 
     feat = torch.cat(ip1_loader, 0)
     labels = torch.cat(idx_loader, 0)
-    visualize(feat.data.cpu().numpy(), labels.data.cpu().numpy(), epoch)
+    visualize(feat.data.cpu().numpy(), centers.data.cpu().numpy(), labels.data.cpu().numpy(), epoch)
 
 
 def main():

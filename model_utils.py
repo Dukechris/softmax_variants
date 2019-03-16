@@ -236,7 +236,7 @@ class CenterLoss(nn.Module):
         # To check the dim of centers and features
         if feat.size(1) != self.feat_dim:
             raise ValueError("Center's dim: {0} should be equal to input feature's dim: {1}".format(self.feat_dim,feat.size(1)))
-        return self.centerlossfunction(feat, y, self.centers)
+        return self.centerlossfunction(feat, y, self.centers), self.centers
 
 
 class CenterlossFunction(Function):
