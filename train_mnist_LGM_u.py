@@ -56,7 +56,7 @@ def test(test_loder, criterion, model, use_cuda):
         data, target = Variable(data), Variable(target)
 
         feats, _ = model(data)
-        logits, mlogits, likelihood = criterion[1](feats, target)
+        logits, mlogits, likelihood, centers = criterion[1](feats, target)
         _, predicted = torch.max(logits.data, 1)
         total += target.size(0)
         correct += (predicted == target.data).sum()
