@@ -184,7 +184,7 @@ class LGMLoss(nn.Module):
         reg = 0.5*torch.sum(torch.index_select(slog_covs, dim=0, index=label.long()))
         likelihood = (1.0/batch_size) * (cdist + reg)
 
-        return logits, margin_logits, likelihood
+        return logits, margin_logits, likelihood, self.centers
 
 
 class LGMLoss_v0(nn.Module):
