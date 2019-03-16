@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 import torch.optim.lr_scheduler as lr_scheduler
 from model_utils import CenterLoss
 from model_utils import Net
+import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
