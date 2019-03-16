@@ -218,7 +218,7 @@ class LGMLoss_v0(nn.Module):
 
         cdiff = feat - torch.index_select(self.centers, dim=0, index=label.long())
         likelihood = (1.0/batch_size) * cdiff.pow(2).sum(1).sum(0) / 2.0
-        return logits, margin_logits, likelihood
+        return logits, margin_logits, likelihood, self.centers
 
 
 class CenterLoss(nn.Module):
